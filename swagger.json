@@ -1,17 +1,17 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Ipekyol Tema API",
-    "description": "PLM entegrasyonu ile tema işlemleri için API servisi. ThemeId ile PLM'den StyleColorways ve IDM'den attributes çeker, kod-açıklama eşleştirmesi yapar ve PLM'e otomatik güncelleme yapar.",
-    "version": "1.0.0",
+    "title": "Ipekyol Tema API - TEST Environment",
+    "description": "PLM entegrasyonu ile tema işlemleri için API servisi - TEST ORTAMI. ThemeId ile PLM'den StyleColorways ve IDM'den attributes çeker, kod-açıklama eşleştirmesi yapar ve PLM'e otomatik güncelleme yapar. Bu API sadece TEST environment'ı (ATJZAMEWEF5P4SNV_TST, FSH1 schema) kullanır.",
+    "version": "1.0.0-test",
     "contact": {
       "name": "Ipekyol API Support"
     }
   },
   "servers": [
     {
-      "url": "https://temaopener-0b1461eedf75.herokuapp.com",
-      "description": "Production Server (Heroku)"
+      "url": "https://temaopener-tst-85e63920bcb9.herokuapp.com",
+      "description": "TEST Server (Heroku - Eco Dyno)"
     },
     {
       "url": "http://localhost:3000",
