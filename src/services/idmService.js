@@ -419,51 +419,78 @@ class IdmService {
       return dateStr;
     };
     
+    // Helper: Sadece dolu alanları ekle
+    const addIfNotEmpty = (key, value) => {
+      if (value !== null && value !== undefined && value !== '' && value !== 0) {
+        result[key] = value;
+      }
+    };
+    
+    // Helper: Kod-Desc çiftini ekle (sadece desc varsa)
+    const addCodeDescPair = (codeKey, descKey, attrName) => {
+      const code = getAttrValue(attrName);
+      const desc = getAttrDescription(attrName);
+      
+      // Eğer description varsa, ikisini de ekle
+      if (desc !== null && desc !== undefined && desc !== '') {
+        if (code !== null && code !== undefined && code !== '' && code !== 0) {
+          result[codeKey] = code;
+        }
+        result[descKey] = desc;
+      }
+    };
+    
     // Temel bilgiler
-    result.TemaName = getAttrValue('Tema_Adi');
-    result.TemaKod = getAttrValue('Tema_Kodu');
-    result.TemaId = getAttrValue('ThemeId') ? parseInt(getAttrValue('ThemeId')) : null;
-    result.InStoreDate = formatInStoreDate(getAttrValue('InStoreDate'));
+    addIfNotEmpty('TemaName', getAttrValue('Tema_Adi'));
+    addIfNotEmpty('TemaKod', getAttrValue('Tema_Kodu'));
     
-    // Cluster
-    result.Cluster = getAttrValue('Cluster');
-    result.ClusterDesc = getAttrDescription('Cluster');
+    const themeId = getAttrValue('ThemeId');
+    if (themeId) {
+      const parsedThemeId = parseInt(themeId);
+      if (!isNaN(parsedThemeId) && parsedThemeId !== 0) {
+        result.TemaId = parsedThemeId;
+      }
+    }
     
-    // LifeStyle
-    result.LifeStyle = getAttrValue('LifeStyle');
-    result.LifeStyleDesc = getAttrDescription('LifeStyle');
+    addIfNotEmpty('InStoreDate', formatInStoreDate(getAttrValue('InStoreDate')));
     
-    // Hibrit
-    result.Hibrit = getAttrValue('Hibrit');
-    result.HibritDesc = getAttrDescription('Hibrit');
+    // Cluster (kod-desc çifti)
+    addCodeDescPair('Cluster', 'ClusterDesc', 'Cluster');
     
-    // Tema Kısa Kod
-    result.TemaKisaKod = getAttrValue('Tema_Kisa_Kod');
-    result.TemaKisaKodDesc = getAttrDescription('Tema_Kisa_Kod');
+    // LifeStyle (kod-desc çifti)
+    addCodeDescPair('LifeStyle', 'LifeStyleDesc', 'LifeStyle');
+    
+    // Hibrit (kod-desc çifti)
+    addCodeDescPair('Hibrit', 'HibritDesc', 'Hibrit');
+    
+    // Tema Kısa Kod (kod-desc çifti)
+    addCodeDescPair('TemaKisaKod', 'TemaKisaKodDesc', 'Tema_Kisa_Kod');
     
     // Sezon (TERS BAĞLANMIŞ - Kod ve Desc yer değiştirmiş)
-    result.Sezon = getAttrDescription('Sezon'); // Description kod olarak
-    result.SezonDesc = getAttrValue('Sezon'); // Value desc olarak
+    const sezonCode = getAttrValue('Sezon');
+    const sezonDesc = getAttrDescription('Sezon');
+    // Eğer description varsa (bu kod olarak gidecek), ikisini de ekle
+    if (sezonDesc !== null && sezonDesc !== undefined && sezonDesc !== '') {
+      result.Sezon = sezonDesc; // Description kod olarak
+      if (sezonCode !== null && sezonCode !== undefined && sezonCode !== '' && sezonCode !== 0) {
+        result.SezonDesc = sezonCode; // Value desc olarak
+      }
+    }
     
-    // Ana Tema
-    result.AnaTemaKod = getAttrValue('Ana_Tema');
-    result.AnaTemaKodDesc = getAttrDescription('Ana_Tema');
+    // Ana Tema (kod-desc çifti)
+    addCodeDescPair('AnaTemaKod', 'AnaTemaKodDesc', 'Ana_Tema');
     
-    // Ürün Sınıfı
-    result.UrunSinifi = getAttrValue('Urun_Sinifi');
-    result.UrunSinifiDesc = getAttrDescription('Urun_Sinifi');
+    // Ürün Sınıfı (kod-desc çifti)
+    addCodeDescPair('UrunSinifi', 'UrunSinifiDesc', 'Urun_Sinifi');
     
-    // Alt Sezon
-    result.AltSezon = getAttrValue('Alt_Sezon');
-    result.AltSezonDesc = getAttrDescription('Alt_Sezon');
+    // Alt Sezon (kod-desc çifti)
+    addCodeDescPair('AltSezon', 'AltSezonDesc', 'Alt_Sezon');
     
-    // Marka
-    result.Marka = getAttrValue('Marka');
-    result.MarkaDesc = getAttrDescription('Marka');
+    // Marka (kod-desc çifti)
+    addCodeDescPair('Marka', 'MarkaDesc', 'Marka');
     
-    // Koleksiyon
-    result.Koleksiyon = getAttrValue('Koleksiyon');
-    result.KoleksiyonDesc = getAttrDescription('Koleksiyon');
+    // Koleksiyon (kod-desc çifti)
+    addCodeDescPair('Koleksiyon', 'KoleksiyonDesc', 'Koleksiyon');
     
     return result;
   }
