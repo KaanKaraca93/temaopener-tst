@@ -440,9 +440,9 @@ class IdmService {
       }
     };
     
-    // Temel bilgiler
-    addIfNotEmpty('TemaName', getAttrValue('Tema_Adi'));
-    addIfNotEmpty('TemaKod', getAttrValue('Tema_Kodu'));
+    // Temel bilgiler (text alanlar, value set değil)
+    addIfNotEmpty('TemaName', getAttrValue('Tema_Ismi'));  // Text alan
+    addIfNotEmpty('TemaKod', getAttrValue('Tema_Kodu'));   // Text alan
     
     const themeId = getAttrValue('ThemeId');
     if (themeId) {
@@ -452,7 +452,8 @@ class IdmService {
       }
     }
     
-    addIfNotEmpty('InStoreDate', formatInStoreDate(getAttrValue('InStoreDate')));
+    // InStore tarihi (doğru alan adı: InStore_Tarihi)
+    addIfNotEmpty('InStoreDate', formatInStoreDate(getAttrValue('InStore_Tarihi')));
     
     // Cluster (kod-desc çifti)
     addCodeDescPair('Cluster', 'ClusterDesc', 'Cluster');
@@ -491,6 +492,9 @@ class IdmService {
     
     // Koleksiyon (kod-desc çifti)
     addCodeDescPair('Koleksiyon', 'KoleksiyonDesc', 'Koleksiyon');
+    
+    // Koleksiyon Tipi (kod-desc çifti)
+    addCodeDescPair('KoleksiyonTipi', 'KoleksiyonTipiDesc', 'Koleksiyon_Tipi');
     
     return result;
   }
