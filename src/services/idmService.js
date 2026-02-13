@@ -328,6 +328,145 @@ class IdmService {
       };
     }
   }
+
+  /**
+   * PID ile tema özelliklerini özel formatta çek (theme-attributes endpoint için)
+   * @param {string} pidDocId - PID (örn: "Theme_Attributes-6-0-LATEST")
+   * @returns {Promise<Object>} Özel formatlı tema bilgisi
+   */
+  async getThemeAttributesFormatted(pidDocId) {
+    try {
+      console.log(`\n📥 Theme Attributes (Formatted) isteği: ${pidDocId}`);
+      
+      // PID'yi parse et
+      const parsedPid = this.parseThemeDescription(pidDocId);
+      console.log(`📊 Parsed PID:`, JSON.stringify(parsedPid, null, 2));
+      
+      // IDM'den özellikleri çek
+      const idmData = await this.getItemByPid(pidDocId);
+      
+      if (!idmData || !idmData.attributes) {
+        throw new Error('IDM data not found or no attributes available');
+      }
+      
+      // Entity değer listelerini çek
+      const entityName = parsedPid.baseName; // Theme_Attributes
+      console.log(`\n📚 Değer listeleri çekiliyor: ${entityName}`);
+      const entityData = await this.getEntityValueLists(entityName);
+      
+      // Attribute'ları değer listeleri ile eşleştir
+      let mappedAttributes = [];
+      if (entityData && entityData.valueLists) {
+        console.log(`\n🔗 Attribute'lar değer listeleri ile eşleştiriliyor...`);
+        mappedAttributes = this.mapAttributesWithValueLists(idmData.attributes, entityData.valueLists);
+        console.log(`✅ ${mappedAttributes.length} attribute eşleştirildi`);
+      }
+      
+      // Özel formata çevir
+      const themeData = this.formatThemeData(mappedAttributes);
+      
+      const result = {
+        BatchId: pidDocId,
+        ProcessedDate: new Date().toISOString(),
+        ThemeData: [themeData]
+      };
+      
+      console.log(`✅ Theme Attributes (Formatted) hazırlandı\n`);
+      
+      return result;
+      
+    } catch (error) {
+      console.error('❌ Theme attributes (formatted) hatası:', error.message);
+      throw error;
+    }
+  }
+
+  /**
+   * Mapped attribute'ları özel formata çevir
+   * @param {Array} mappedAttributes - Eşleştirilmiş attribute'lar
+   * @returns {Object} Özel formatlı tema verisi
+   */
+  formatThemeData(mappedAttributes) {
+    const result = {};
+    
+    // Attribute değerlerini bul
+    const getAttrValue = (name) => {
+      const attr = mappedAttributes.find(a => a.name === name);
+      return attr ? attr.value : null;
+    };
+    
+    const getAttrDescription = (name) => {
+      const attr = mappedAttributes.find(a => a.name === name);
+      return attr ? attr.codeDescription : null;
+    };
+    
+    // InStore tarihini formatla (YYYY-MM-DD -> DD.MM.YYYY)
+    const formatInStoreDate = (dateStr) => {
+      if (!dateStr) return null;
+      
+      // Eğer zaten DD.MM.YYYY formatındaysa
+      if (dateStr.includes('.')) return dateStr;
+      
+      // YYYY-MM-DD veya ISO formatı ise
+      const date = new Date(dateStr);
+      if (!isNaN(date.getTime())) {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}.${month}.${year}`;
+      }
+      
+      return dateStr;
+    };
+    
+    // Temel bilgiler
+    result.TemaName = getAttrValue('Tema_Adi');
+    result.TemaKod = getAttrValue('Tema_Kodu');
+    result.TemaId = getAttrValue('ThemeId') ? parseInt(getAttrValue('ThemeId')) : null;
+    result.InStoreDate = formatInStoreDate(getAttrValue('InStoreDate'));
+    
+    // Cluster
+    result.Cluster = getAttrValue('Cluster');
+    result.ClusterDesc = getAttrDescription('Cluster');
+    
+    // LifeStyle
+    result.LifeStyle = getAttrValue('LifeStyle');
+    result.LifeStyleDesc = getAttrDescription('LifeStyle');
+    
+    // Hibrit
+    result.Hibrit = getAttrValue('Hibrit');
+    result.HibritDesc = getAttrDescription('Hibrit');
+    
+    // Tema Kısa Kod
+    result.TemaKisaKod = getAttrValue('Tema_Kisa_Kod');
+    result.TemaKisaKodDesc = getAttrDescription('Tema_Kisa_Kod');
+    
+    // Sezon (TERS BAĞLANMIŞ - Kod ve Desc yer değiştirmiş)
+    result.Sezon = getAttrDescription('Sezon'); // Description kod olarak
+    result.SezonDesc = getAttrValue('Sezon'); // Value desc olarak
+    
+    // Ana Tema
+    result.AnaTemaKod = getAttrValue('Ana_Tema');
+    result.AnaTemaKodDesc = getAttrDescription('Ana_Tema');
+    
+    // Ürün Sınıfı
+    result.UrunSinifi = getAttrValue('Urun_Sinifi');
+    result.UrunSinifiDesc = getAttrDescription('Urun_Sinifi');
+    
+    // Alt Sezon
+    result.AltSezon = getAttrValue('Alt_Sezon');
+    result.AltSezonDesc = getAttrDescription('Alt_Sezon');
+    
+    // Marka
+    result.Marka = getAttrValue('Marka');
+    result.MarkaDesc = getAttrDescription('Marka');
+    
+    // Koleksiyon
+    result.Koleksiyon = getAttrValue('Koleksiyon');
+    result.KoleksiyonDesc = getAttrDescription('Koleksiyon');
+    
+    return result;
+  }
 }
 
 // Create singleton instance

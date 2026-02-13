@@ -276,6 +276,55 @@
         }
       }
     },
+    "/api/theme-attributes": {
+      "post": {
+        "tags": ["Theme"],
+        "summary": "Tema Özellikleri (Özel Format)",
+        "description": "PID (pidDocId) ile IDM'den tema özelliklerini çeker ve özel formatta döner. InStoreDate formatlanır, Sezon kod-desc ters bağlanır.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ThemeAttributesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tema özellikleri başarıyla alındı",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThemeAttributesFormattedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Geçersiz istek",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Sunucu hatası",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/style/update": {
       "post": {
         "tags": ["Style"],
@@ -675,6 +724,164 @@
             "type": "boolean",
             "example": true,
             "description": "Kod-açıklama eşleşmesi yapıldı mı?"
+          }
+        }
+      },
+      "ThemeAttributesRequest": {
+        "type": "object",
+        "required": ["pidDocId"],
+        "properties": {
+          "pidDocId": {
+            "type": "string",
+            "description": "IDM'deki PID (Theme Description)",
+            "example": "Theme_Attributes-6-0-LATEST"
+          }
+        }
+      },
+      "ThemeAttributesFormattedResponse": {
+        "type": "object",
+        "properties": {
+          "BatchId": {
+            "type": "string",
+            "example": "Theme_Attributes-6-0-LATEST",
+            "description": "İşlem ID (pidDocId)"
+          },
+          "ProcessedDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-01-30T11:55:59.000Z",
+            "description": "İstek tarihi"
+          },
+          "ThemeData": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FormattedThemeData"
+            }
+          }
+        }
+      },
+      "FormattedThemeData": {
+        "type": "object",
+        "properties": {
+          "TemaName": {
+            "type": "string",
+            "example": "FW 26/27_B_IPK_CAK BCT2_Deneme",
+            "description": "Tema adı"
+          },
+          "TemaKod": {
+            "type": "string",
+            "example": "8906",
+            "description": "Tema kodu"
+          },
+          "TemaId": {
+            "type": "integer",
+            "example": 1040,
+            "description": "Tema ID"
+          },
+          "InStoreDate": {
+            "type": "string",
+            "example": "20.06.2026",
+            "description": "Mağazaya giriş tarihi (DD.MM.YYYY formatında)"
+          },
+          "Cluster": {
+            "type": "string",
+            "example": "013",
+            "description": "Cluster kodu"
+          },
+          "ClusterDesc": {
+            "type": "string",
+            "example": "B",
+            "description": "Cluster açıklaması"
+          },
+          "LifeStyle": {
+            "type": "string",
+            "example": "003",
+            "description": "LifeStyle kodu"
+          },
+          "LifeStyleDesc": {
+            "type": "string",
+            "example": "SMART",
+            "description": "LifeStyle açıklaması"
+          },
+          "Hibrit": {
+            "type": "string",
+            "example": "002",
+            "description": "Hibrit kodu"
+          },
+          "HibritDesc": {
+            "type": "string",
+            "example": "PLAN",
+            "description": "Hibrit açıklaması"
+          },
+          "TemaKisaKod": {
+            "type": "string",
+            "example": "476",
+            "description": "Tema kısa kod"
+          },
+          "TemaKisaKodDesc": {
+            "type": "string",
+            "example": "B-BCT2",
+            "description": "Tema kısa kod açıklaması"
+          },
+          "Sezon": {
+            "type": "string",
+            "example": "FW 26/27",
+            "description": "Sezon (Kod ve Desc ters bağlanmış - Description)"
+          },
+          "SezonDesc": {
+            "type": "string",
+            "example": "2026-27 KIS",
+            "description": "Sezon açıklaması (Kod ve Desc ters bağlanmış - Value)"
+          },
+          "AnaTemaKod": {
+            "type": "string",
+            "example": "023",
+            "description": "Ana tema kodu"
+          },
+          "AnaTemaKodDesc": {
+            "type": "string",
+            "example": "SCT 2",
+            "description": "Ana tema açıklaması"
+          },
+          "UrunSinifi": {
+            "type": "string",
+            "example": "001",
+            "description": "Ürün sınıfı kodu"
+          },
+          "UrunSinifiDesc": {
+            "type": "string",
+            "example": "NORMAL",
+            "description": "Ürün sınıfı açıklaması"
+          },
+          "AltSezon": {
+            "type": "string",
+            "example": "FW1",
+            "description": "Alt sezon"
+          },
+          "AltSezonDesc": {
+            "type": "string",
+            "example": "FW1",
+            "description": "Alt sezon açıklaması"
+          },
+          "Marka": {
+            "type": "string",
+            "example": "001",
+            "description": "Marka kodu"
+          },
+          "MarkaDesc": {
+            "type": "string",
+            "example": "IPEKYOL",
+            "description": "Marka açıklaması"
+          },
+          "Koleksiyon": {
+            "type": "string",
+            "example": "001",
+            "description": "Koleksiyon kodu"
+          },
+          "KoleksiyonDesc": {
+            "type": "string",
+            "example": "Ana Koleksiyon",
+            "description": "Koleksiyon açıklaması"
           }
         }
       },
