@@ -366,7 +366,7 @@ class IdmService {
       const themeData = this.formatThemeData(mappedAttributes);
       
       const result = {
-        BatchId: pidDocId,
+        BatchId: `${pidDocId}_${Date.now()}`,
         ProcessedDate: new Date().toISOString(),
         ThemeData: [themeData]
       };
