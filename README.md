@@ -11,7 +11,7 @@ PLM entegrasyonu ile tema işlemleri için API servisi - **TEST ORTAMI**
 - ✅ IDM Attributes & Value Lists
 - ✅ Kod-Açıklama Eşleştirme
 - ✅ Otomatik PATCH İşlemi (Style bazında)
-- ✅ Schema: FSH1 (Test)
+- ✅ Schema: FSH4 (Test)
 
 ## Kurulum
 

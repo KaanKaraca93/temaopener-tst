@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Ipekyol Tema API - TEST Environment",
-    "description": "PLM entegrasyonu ile tema işlemleri için API servisi - TEST ORTAMI. ThemeId ile PLM'den StyleColorways ve IDM'den attributes çeker, kod-açıklama eşleştirmesi yapar ve PLM'e otomatik güncelleme yapar. Bu API sadece TEST environment'ı (ATJZAMEWEF5P4SNV_TST, FSH1 schema) kullanır.",
+    "description": "PLM entegrasyonu ile tema işlemleri için API servisi - TEST ORTAMI. ThemeId ile PLM'den StyleColorways ve IDM'den attributes çeker, kod-açıklama eşleştirmesi yapar ve PLM'e otomatik güncelleme yapar. Bu API sadece TEST environment'ı (ATJZAMEWEF5P4SNV_TST, FSH4 schema) kullanır.",
     "version": "1.0.0-test",
     "contact": {
       "name": "Ipekyol API Support"
@@ -1020,7 +1020,7 @@
                   "schema": {
                     "type": "string",
                     "example": "FSH2",
-                    "description": "FSH2: Production, FSH1: Test"
+                    "description": "FSH2: Production, FSH4: Test"
                   }
                 }
               }

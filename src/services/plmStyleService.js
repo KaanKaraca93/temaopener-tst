@@ -171,8 +171,8 @@ class PlmStyleService {
       
       const url = `${PLM_CONFIG.ionApiUrl}/${PLM_CONFIG.tenantId}/FASHIONPLM/job/api/job/tasks`;
       
-      // TEST repository - always use FSH1 schema
-      const schema = 'FSH1';
+      // TEST repository - always use FSH4 schema
+      const schema = 'FSH4';
       
       const payload = {
         TaskId: 'syncSearchData',
